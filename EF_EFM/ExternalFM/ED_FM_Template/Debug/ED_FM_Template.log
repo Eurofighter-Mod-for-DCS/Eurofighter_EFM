@@ -1,0 +1,20 @@
+﻿E:\Visual Studio c++\Visual Studio main\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Actuators.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\Actuators.cpp(131,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  Airframe.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\Airframe.cpp(1766,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  ED_FM_Template.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\ED_FM_Template.h(2,10): fatal error C1083: Cannot open include file: '../../include/FM/wHumanCustomPhysicsAPI.h': No such file or directory
+  Engine.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\Engine.cpp(696,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  FlightModel.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\FlightModel.cpp(621,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  Fuel_System.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\Fuel_System.cpp(131,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  Input.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\Input.cpp(266,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  State.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\State.cpp(57,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  Timer.cpp
+F:\DCS_Modding\F104G_Mod_Test\F104G_Standalone_und_EFM\ExternalFM\ED_FM_Template\Timer.cpp(63,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  Generating Code...
