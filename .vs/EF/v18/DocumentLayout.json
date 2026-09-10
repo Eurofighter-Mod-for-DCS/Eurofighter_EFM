@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "ED_FM_Template\\FCS.cpp",
               "ToolTip": "C:\\Users\\patry\\Documents\\GitHub\\Eurofighter_EFM\\ED_FM_Template\\FCS.cpp",
               "RelativeToolTip": "ED_FM_Template\\FCS.cpp",
-              "ViewState": "AgIAAHgAAAAAAAAAAAAAAIMAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABUBAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-11-30T00:01:21.319Z",
               "IsPinned": true,
@@ -54,7 +54,7 @@
               "RelativeDocumentMoniker": "ED_FM_Template\\Pid.h",
               "ToolTip": "C:\\Users\\patry\\Documents\\GitHub\\Eurofighter_EFM\\ED_FM_Template\\Pid.h",
               "RelativeToolTip": "ED_FM_Template\\Pid.h",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAADgAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-03-01T11:59:47.92Z",
               "EditorCaption": ""
@@ -69,8 +69,7 @@
               "RelativeToolTip": "ED_FM_Template\\Engine.h",
               "ViewState": "AgIAAHwBAAAAAAAAAAAAAIcBAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-02-27T22:25:39.239Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-27T22:25:39.239Z"
             },
             {
               "$type": "Document",
@@ -82,8 +81,7 @@
               "RelativeToolTip": "ED_FM_Template\\Airframe.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACIHAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-02-27T22:24:49.602Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-27T22:24:49.602Z"
             },
             {
               "$type": "Document",

@@ -83,6 +83,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\bin</OutDir>
     <TargetName>EF</TargetName>
+    <IncludePath>C:\Users\patry\Documents\GitHub\Eurofighter_EFM\include\FM;C:\Users\patry\Documents\GitHub\Eurofighter_EFM\include\Cockpit;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
