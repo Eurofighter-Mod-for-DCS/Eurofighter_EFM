@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\bin</OutDir>
+    <OutDir>..\..\..\..\Saved Games\DCS\Mods\aircraft\EF2000-V2\bin</OutDir>
     <TargetName>EF</TargetName>
     <IncludePath>C:\Users\patry\Documents\GitHub\Eurofighter_EFM\include\FM;C:\Users\patry\Documents\GitHub\Eurofighter_EFM\include\Cockpit;$(IncludePath)</IncludePath>
   </PropertyGroup>
@@ -149,7 +149,6 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\DCS-Logger.hpp" />
     <ClInclude Include="Actuators.h" />
     <ClInclude Include="AeroData_1.h" />
     <ClInclude Include="Airframe.h" />
@@ -205,9 +204,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Timer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

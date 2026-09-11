@@ -22,6 +22,7 @@ void Flight_Control_System::zeroInit()
 	new_canard_anims = 0.0;
 	canard_position = 0.0;
 	current_aoa = 0.0;
+	current_g = 0.0;
 
 
 	pitch_error_prior = 0.0;
@@ -32,9 +33,12 @@ void Flight_Control_System::zeroInit()
 	pitch_error_prior = pitch_error;
 	pitch_meassurement_prior = pitch_rate;
 	//                         P  I  D
-	pitchController.initialize(1, 0, 0, -1.0, 1.0);
+	pitchController.initialize(0.1, 0.1, 0.2, -1.0, 1.0);
 	//                        P  I  D
 	rollController.initialize(3, 0, 0, -1.0, 1.0);
+	//                        P  I  D
+	yawController.initialize(1, 1, 1, -1.0, 1.0);
+
 
 }
 void Flight_Control_System::coldInit()
@@ -54,35 +58,19 @@ void Flight_Control_System::airborneInit()
 void Flight_Control_System::limit_pitch()
 {
 	//Assign pitchcmd to filtered to make life easier
-
-	pitch_cmd_filtered = pitchcmd;
-
-	//Hard limiter for G (Safety)
-
-	double scale_factor = (max_g + 5) / current_g;
-	if (scale_factor < 1)
-	{
-		pitch_cmd_filtered *= limit(scale_factor, 0.0, 1.0);
-	}
-	scale_factor = max_AoA / limit(current_aoa, 0.0, 100.0);
-	if (scale_factor < 1)
-	{
-		pitch_cmd_filtered *= limit(scale_factor, 0.0, 1.0);
-	}
-	pitch_cmd_filtered = limit(pitch_cmd_filtered, -1.0, 1.0);
-
-	// Assign pitch to a pitch range
-	//pitch_cmd_filtered *= max_g; OLD
-	bool is_neg = false;
-
-	//Run the pid
-	double target_g = pitch_cmd_filtered * 4;//(1 + pitch_cmd_filtered * 100 / 12.5);
-	pitchController.update(target_g, current_g, m_dt);
-	//pitch_cmd_filtered = pitchController.getOutputPID() / 4; Temporarly comment
+	double g_input = (-pitchcmd * 4) + 1;
+	pitchController.update(g_input,current_g,m_dt);
+	// New logic down here
+	printf("Pitch command: %f \n", pitchcmd);
+	pitch_cmd_filtered = pitchController.getOutputPID();
+	printf("Pitch Output: %f \n", pitch_cmd_filtered);
+	printf("Current G: %f \n", current_g);
+	printf("Target G: %f \n", g_input);
 }
 
 void Flight_Control_System::limit_yaw()
 {
+	// Should be fine untouched?
 	yaw_cmd_filtered = yawcmd;
 	if (landing_FCS_mode == 1.0)
 	{
@@ -106,151 +94,66 @@ void Flight_Control_System::limit_yaw()
 
 //void Flight_Control_System::low_speed_recovery()
 //{
-//	if (airspeed <= 0.209977)
-//	{
-//		throttle_cmd_filtered_1 = 1.0;
-//		throttle_cmd_filtered_2 = 1.0;
-//	}
-//	else
-//	{
-//		throttle_cmd_filtered_1 = throttlecmd_1;
-//		throttle_cmd_filtered_2 = throttlecmd_2;
-//	}
+//	For FBW Completion
 //}
 
 void Flight_Control_System::limit_roll()
 {
+	//Default filtered to cmd
 	roll_cmd_filtered = rollcmd;
-	if (landing_FCS_mode == 1.0)
-	{
-		roll_cmd_filtered *= 0.5;
-	}
-	else if (subsonic_FCS_mode == 1.0)
-	{
-		roll_cmd_filtered *= 1;
-	}
-	else if (supersonic_FCS_mode == 1.0)
-	{
-		roll_cmd_filtered *= 0.25;
-	}
-	else if (refueling_FCS_mode == 1.0)
-	{
-		roll_cmd_filtered *= 0.5;
-	}
-	roll_cmd_filtered = limit(roll_cmd_filtered, -1.0, 1.0);
-	roll_cmd_filtered = roll_cmd_filtered * (200 * DEG_TO_RAD);
-	//printf("Roll command: %f \n", rollcmd);
-	//printf("Roll command to deg: %f \n", roll_cmd_filtered / DEG_TO_RAD);
-	//printf("Roll rate deg: %f \n", roll_rate / DEG_TO_RAD);
-	rollController.update(roll_cmd_filtered, roll_rate, m_dt);
-	roll_cmd_filtered = -(rollController.getOutputPID() / (200 * DEG_TO_RAD));
-	rollController.debug();
 }
 
 void Flight_Control_System::limiter_mode()
 {
-	if (m_airframe.getRefuelingDoor() < 0.3)
-	{
-		if (nosewheel_angle > 0.1)
-		{
-			landing_FCS_mode = 1.0; //used for canard animations based on FCS mode
-			supersonic_FCS_mode = 0.0;
-			subsonic_FCS_mode = 0.0;
-			refueling_FCS_mode = 0.0;
-			landing_limit();
-		}
-		else if (m_state.m_mach > 0.98)
-		{
-			landing_FCS_mode = 0.0;
-			supersonic_FCS_mode = 1.0;
-			subsonic_FCS_mode = 0.0;
-			refueling_FCS_mode = 0.0;
-			supersonic_limit();
-		}
-		else
-		{
-			landing_FCS_mode = 0.0; 
-			supersonic_FCS_mode = 0.0;
-			subsonic_FCS_mode = 1.0;
-			refueling_FCS_mode = 0.0;
-			subsonic_limit();
-		}
-	}
-	else
-	{
-		landing_FCS_mode = 0.0;
-		supersonic_FCS_mode = 0.0;
-		subsonic_FCS_mode = 0.0;
-		refueling_FCS_mode = 1.0;
-		refueling_limit();
-	}
-}
+	/*
+	Needs rewriting completely
 
-void Flight_Control_System::subsonic_limit()
-{
-	// OLD
-	//Set max limits for this mode
-	limited_roll_rate = 200.0 * DEG_TO_RAD;
+	landing_FCS_mode = 1.0; //Old version for reference
+	supersonic_FCS_mode = 0.0;
+	subsonic_FCS_mode = 0.0;
+	refueling_FCS_mode = 0.0;
+	landing_limit();
 
-
-	//----- NEW FBW LIMITS  ------
+	Old FBW limits reference:
 	max_AoA = 30 * DEG_TO_RAD;
 	max_g = 4.45; // 7.25 G
 	max_neg_g = -1;
 
 	max_current_pitch_rate = 15 * DEG_TO_RAD;
 	min_current_pitch_rate = -2 * DEG_TO_RAD;
+	*/
+}
+
+void Flight_Control_System::subsonic_limit()
+{
+	//Hard limit
+	limited_roll_rate = 200.0 * DEG_TO_RAD;
 }
 
 void Flight_Control_System::landing_limit()
 {
-	// OLD
-	//Set max limits for this mode
+	//Hard limit
 	limited_roll_rate = 80.0 * DEG_TO_RAD;
-	
-
-	//----- NEW FBW LIMITS  ------
-	max_AoA = 15 * DEG_TO_RAD;
-	max_g = 4; // 4 G
-	max_neg_g = -0;
-
-	max_current_pitch_rate = 15 * DEG_TO_RAD;
-	min_current_pitch_rate = -2 * DEG_TO_RAD;
 }
 
 void Flight_Control_System::supersonic_limit()
 {
-	// OLD
-	//Set max limits for this mode
+	//Hard limit
 	limited_roll_rate = 200.0 * DEG_TO_RAD;
-	
-
-	//----- NEW FBW LIMITS  ------
-	max_AoA = 15 * DEG_TO_RAD;
-	max_g = 9.0 ; // 9 G
-	max_neg_g = -1;
-
-	max_current_pitch_rate = 7 * DEG_TO_RAD;
-	min_current_pitch_rate = -2 * DEG_TO_RAD;
 }
 
 void Flight_Control_System::refueling_limit()
 {
-	// OLD
-	//Set max limits for this mode
+	//Hard limit
 	limited_roll_rate = 80.0 * DEG_TO_RAD;
-
-	//----- NEW FBW LIMITS  ------
-	max_g = 2.0 ; //2 G
-	max_neg_g = -0.0;
-	max_AoA = 15 * DEG_TO_RAD;
-
-	max_current_pitch_rate = 15 * DEG_TO_RAD;
-	min_current_pitch_rate = -2 * DEG_TO_RAD;
 }
 
 void Flight_Control_System::autoDriveCanardPosition()
 {
+	/*
+	
+	Old reference code:
+
 	double transition_speed = m_dt / 10;
 	canard_position = new_canard_anims;
 	// Move the canards to assist between 8 and 5 degrees
@@ -270,13 +173,14 @@ void Flight_Control_System::autoDriveCanardPosition()
 	{
 		new_canard_anims = 0;
 	}
+	*/
 }
 //----------------------------------------------------
 
 void Flight_Control_System::update(double dt)
 {
 	pitch_rate = m_state.m_omega.z;
-	roll_rate = m_state.m_omega.x; //convert to degrees for ease of use
+	roll_rate = m_state.m_omega.x;
 	current_g = m_state.getNY();
 	nosewheel_angle = m_airframe.getGearNPosition();
 	pitchcmd = m_input.getPitch();

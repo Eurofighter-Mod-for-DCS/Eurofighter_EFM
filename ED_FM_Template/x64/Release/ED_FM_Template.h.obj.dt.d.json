@@ -1,0 +1,13 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\patry\\documents\\github\\eurofighter_efm\\ed_fm_template\\ed_fm_template.h",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\users\\patry\\documents\\github\\eurofighter_efm\\ed_fm_template\\ed_fm_templateapi.h",
+            "c:\\users\\patry\\documents\\github\\eurofighter_efm\\include\\fm\\whumancustomphysicsapi.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
