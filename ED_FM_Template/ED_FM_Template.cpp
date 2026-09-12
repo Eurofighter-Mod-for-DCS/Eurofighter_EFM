@@ -162,6 +162,7 @@ void ed_fm_set_current_mass_state (double mass,
 									)
 {
 	s_state->setCOM(Vec3(center_of_mass_x, center_of_mass_y, center_of_mass_z));
+	s_airframe->setMass(mass);
 }
 /*
 called before simulation to set up your environment for the next step

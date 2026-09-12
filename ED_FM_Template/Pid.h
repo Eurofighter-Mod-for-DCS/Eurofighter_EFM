@@ -16,22 +16,37 @@ public:
         this->outputMax = outputMax;
     }
 
-    double update(double setpoint, double value, double dt, bool inverted_logic = false) {
+    double update(double setpoint, double value, double dt, bool inverted_logic = false, bool forwardgain = false) {
         double error = inverted_logic ? setpoint - value : value - setpoint;
         
         if (dt <= 1e-6) return value_out; //Prevents zero errors
-
         total_time += dt;
 
         P = Kp * error;
 
-        integral += error * dt;
         I = Ki * integral;
 
         double derivative = (error - prior_error) / dt;
         D = Kd * derivative;
 
-        double value_out = P + I + D;
+        F = 0.0;
+        if (forwardgain)
+        {
+            double kFF = 0.05; // deflection units per G — purely empirical
+
+            double delta_G = setpoint - 1.0;
+            F = kFF * delta_G;
+        }
+        double value_out = P + I + D + F;
+
+        bool saturated = (value_out >= outputMax) || (value_out <= outputMin);
+
+        if (!saturated) {
+            integral += error * dt;
+            I = Ki * integral;
+            value_out = P + I + D + F;
+        }
+
         value_out = clamp(value_out, outputMin, outputMax);
 
         prior_error = error;
@@ -69,6 +84,7 @@ private:
     double P = 0.0;
     double I = 0.0;
     double D = 0.0;
+    double F = 0.0;
     double tau = 0.0;
     double value_out = 0.0;
     double total_time = 0.0;

@@ -743,8 +743,10 @@ void FlightModel::addMoment(const Vec3& force, const Vec3& pos)
 	//Add the force to the overall force
 	//m_force_boddy += force;//auskommentiert, da ich zu m_boddy_force nichts hinzufügen möchte, sondern nur momente aus Kräften
 
-	//Calculate the relative position to the centre of mass
-	//Wenn CenterOfMass in Lua gesetzt wird, dann reicht hier als "eingabe" eine feste Zahl aus, um die sich der Druckpunkt der Kraft nach hinten verschiebt 
+	//Calculate the relative position to the centre of 
+	// 
+	//Wenn CenterOf
+	// in Lua gesetzt wird, dann reicht hier als "eingabe" eine feste Zahl aus, um die sich der Druckpunkt der Kraft nach hinten verschiebt 
 	Vec3 relativePos = pos - m_state.m_com;
 
 	//Calculate the "moment" (actually torque)

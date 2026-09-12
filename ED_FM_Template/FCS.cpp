@@ -33,7 +33,7 @@ void Flight_Control_System::zeroInit()
 	pitch_error_prior = pitch_error;
 	pitch_meassurement_prior = pitch_rate;
 	//                         P  I  D
-	pitchController.initialize(0.1, 0.1, 0.2, -1.0, 1.0);
+	pitchController.initialize(0.75, 0.03, 0.1, -1.0, 1.0);  //G force based limit
 	//                        P  I  D
 	rollController.initialize(3, 0, 0, -1.0, 1.0);
 	//                        P  I  D
@@ -57,12 +57,38 @@ void Flight_Control_System::airborneInit()
 //Revised FBW System 
 void Flight_Control_System::limit_pitch()
 {
-	//Assign pitchcmd to filtered to make life easier
-	double g_input = (-pitchcmd * 4) + 1;
-	pitchController.update(g_input,current_g,m_dt);
 	// New logic down here
+	// G Based trimming/limiting below -------------------------------
+	double g_input;
+	if (pitchcmd > 0) {
+		// stick forward (down) -> negative G, only down to -3
+		g_input = 1.0 + pitchcmd * (1.0 - (-3.0)); // pitchcmd in [-1,0] maps g_input in [1, -3]
+	}
+	else {
+		// stick aft (up) -> positive G, up to +9
+		g_input = 1.0 + pitchcmd * (9.0 - 1.0);    // pitchcmd in [0,1] maps g_input in [1, 9]
+	}
+	g_input = clamp(g_input, -4.0, 12.0); //Just a safety
+	//Actual PID
+	pitchController.update(g_input, current_g, m_dt, true, true);
+	pitch_cmd_filtered = pitchController.getOutputPID() * 0.7;
+	//pitchController.debug();
+
+	// AoA Based trimming/limiting below -------------------------------
+
+	double temp_max_aoa = 40 * DEG_TO_RAD;
+	double temp_min_aoa = -8 * DEG_TO_RAD;
+	if (current_aoa >= temp_max_aoa)
+	{
+		pitch_cmd_filtered = 0;
+	}
+	else if (current_aoa <= temp_min_aoa)
+	{
+		pitch_cmd_filtered = 0;
+	}
+	
+	// Debug below -------------------------------
 	printf("Pitch command: %f \n", pitchcmd);
-	pitch_cmd_filtered = pitchController.getOutputPID();
 	printf("Pitch Output: %f \n", pitch_cmd_filtered);
 	printf("Current G: %f \n", current_g);
 	printf("Target G: %f \n", g_input);
@@ -186,6 +212,7 @@ void Flight_Control_System::update(double dt)
 	pitchcmd = m_input.getPitch();
 	rollcmd = m_input.getRoll();
 	yawcmd = m_input.getYaw();
+	mass = m_airframe.getMass();
 	//throttlecmd_1 = m_input.getThrottle();
 	//throttlecmd_2 = m_input.getThrottle2();
 	current_aoa = m_state.m_aoa;

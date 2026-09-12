@@ -80,6 +80,8 @@ private:
     double max_neg_g = 0.0;
     double current_g = 1.0;
     double pitch_rate = 0.0;
+    
+    double mass = 0.0; //Aircraft mass
 
 	double AOA_BUFFER_ZONE = 0.05; // 3° in radians
 	double BLEND_RATE = 0.5; // Blend rate for soft limit zone
